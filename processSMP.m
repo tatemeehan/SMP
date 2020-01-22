@@ -1,14 +1,18 @@
 clear; close all; clc
 isWindows = 1;
 isLinux = 0;
+isParallel = 1;
+if isParallel
     % Wake Parallel Computing
-%     if isempty(gcp('nocreate'))     
-%         nWorkers = 10;
-%         p = parpool(nWorkers);
-%     else nWorkers = 10;
-%     end
+    if isempty(gcp('nocreate'))     
+        nWorkers = 4;
+        p = parpool(nWorkers);
+    else
+        nWorkers = 4;
+    end
+end
 %% Read SMP Profile
-Locs = 1%:10; % Number of SMP Sites
+Locs = 1:10; % Number of SMP Sites
 Coords = cell(length(Locs),1);
 for ff = Locs
     workingDir = pwd;
@@ -283,7 +287,7 @@ catch
     Waypoints(ff).latitude = [];
 end
 %% Invert SMP profile
-isInvert = 0;
+isInvert = 1;
 if isInvert
 fthresh = 0.0195; % Default
 pfthresh = 0.1;
@@ -291,17 +295,8 @@ winsize = 10;
 dz = 1; % [mm] measurements to increment by
 invSMP = cell(length(files),1);
 % Parallel Inversion
-isParalell = 0
 if isParallel
-    % Wake Parallel Computing
-    if isempty(gcp('nocreate'))     
-        nWorkers = 4;
-        p = parpool(nWorkers);
-    else
-        nWorkers = 4;
-    end
     parfor (ii = 1:length(files),nWorkers)
-        % for ii = 1:length(files)
         invSMP{ii}=invertSMP_profile3c(SMP{ii}.depth_F,SMP{ii}.force,winsize,dz,pfthresh,fthresh);
     end
 else
@@ -314,34 +309,34 @@ end
 % Export SMP Data and Inversion Results
 isExport = 1;
 if isExport
-cd(dataDir)
-save([tag,'data'],'SMP','-V7.3')
-% save([tag,'results'],'invSMP','-V7.3')
-% save([tag,'files'],'files','-V7.3')
-cd(workingDir)
+    cd(dataDir)
+    save([tag,'data'],'SMP','-V7.3')
+    % save([tag,'results'],'invSMP','-V7.3')
+    % save([tag,'files'],'files','-V7.3')
+    cd(workingDir)
 end
 toc
 disp(' ')
 % Clear Memory for next Loop
 clear
+else
+    % Export SMP Data and if no Inversion Results
+    isExport = 0;
+    if isExport
+        cd(dataDir)
+        save([tag,'data'],'SMP','-V7.3')
+        % save([tag,'results'],'invSMP','-V7.3')
+        % save([tag,'files'],'files','-V7.3')
+        cd(workingDir)
+    end
 end
-% Export SMP Data and Inversion Results
-isExport = 1;
-if isExport
-cd(dataDir)
-save([tag,'data'],'SMP','-V7.3')
-% save([tag,'results'],'invSMP','-V7.3')
-% save([tag,'files'],'files','-V7.3')
-cd(workingDir)
-end
-end
-
+% Also Export the Waypoints
 if isExport
     cd('E:\CRREL_SnowCompaction\W_YELLOWSTONE\GPS')
     save('SMPwaypoints','Waypoints','-V7.3')
     cd(workingDir)
 end
-
+end
 
 %% Estimate Noise Level Force Threshold
 % Estimate fthresh from data
