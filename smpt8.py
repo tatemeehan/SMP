@@ -5,8 +5,8 @@ import struct, numpy
 ##########################################################
 # Author:	Sascha Grimm
 # Company:	SLF, Institute for Snow and Avalanche Research
-# Hacked by: Tate Meehan
-# Cold Regions Research and Engineering Labs
+# Hacked by: Tate Meehan py27 1/23/2020
+# U.S. Army Cold Regions Research and Engineering Laboratory
 ##########################################################
 #this file contents functions to create an object PNT that stores file name,raw data, header infos
 #and meaurement data from a binary .pnt file. Run as script, the main function opens a file dialog
@@ -46,7 +46,6 @@ class Pnt(object):
 					'##################################\nHeader:\n##################################\n')
 		message=''
 		for entry, value in sorted(self.header.items()): 
-#            line = '%s %s\n' %(entry.ljust(15), str(value))
 			line = '%s %s\n' %(entry.ljust(15), str(value))
 			file.write(line)
 			message += line
@@ -207,40 +206,27 @@ class Pnt(object):
 def main():
     from os import listdir
     from os.path import isfile, join
-    path1 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\25Jan2018\SMPS\25CRWYSMPS"
-    path2 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\25Jan2018\SMPS\25CTWYSMPS"
-    path3 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\26Jan2018\SMPS\26MobLPSMPS"
-    path4 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SEVSSMPS"
-    path5 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SWVSSPMS"
-    path6 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\28Jan2018\SMPS\28CMobLPSMPS"
-    path7 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\29Jan2018\SMPS\29SWVSSMPS"
-    path8 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30NMobLPSPMS"
-    path9 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30STXYMTVRCDSMPS"
-    path10 = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\31Jan2018\SMPS\31STXYVSMTVRCDSMPS"
-    paths = [path1,path2,path3,path4,path5,path6,path7,path8,path9,path10]
-#    mypath = r"E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\25Jan2018\SMPS\25CRWYSMPS"
-#    tmp = [f for f in listdir(mypath) if f.endswith(".pnt") if isfile(join(mypath, f))]
+    path1 = r"D:\CRREL_SnowCompaction\CRREL\testSMP"
+    paths = [path1]
+    # Add paths as necesarry i.e.
+    #    paths = [path1,path2,path3,path4,path5,path6,path7,path8,path9,path10]
+
+
     for pth in paths:
         tmp = [f for f in listdir(pth) if f.endswith(".pnt") if isfile(join(pth, f))]
         files = []
         for f in tmp:
             fil = pth + "\\" + f
-    #        tf = tf + (join(list(files)))
             files.append(fil)
         converted = []
         for p in files:
             pnt = Pnt(p)
             pnt.printHeader()
-    #        pnt.printData()
+#            pnt.printData()
             converted.append(pnt.writeFile(False))
         str = '\n'
         list = str.join(converted)
-#	gui.infoScroll('Converted %d file(s):\n %s' %(len(converted),list))
-    #	"""Convert selected .pnt binarys to readable .txt files"""	
-#	show = gui.ask('Show Measurement Graph?')
-#	files = gui.openFile()    
-    #		if show:
-#			plotData(pnt)
+
 ###########################################################	
 if __name__ == '__main__':
   		main()
