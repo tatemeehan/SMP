@@ -1,4 +1,9 @@
+%% processSMP.m 
+% Reads .pnt profiles, .txt header file (from py27), and .xlsx QC metadata
+% Performs automatic processing for snow surface identification, drift
+% correction, and microstructural data inversion (invertSMP_profile3c.m)
 clear; close all; clc
+%%
 isWindows = 1;
 isLinux = 0;
 isParallel = 1;
@@ -12,7 +17,7 @@ if isParallel
     end
 end
 %% Read SMP Profile
-Locs = 1:10; % Number of SMP Sites
+Locs = 3;%1:10; % Number of SMP Sites
 Coords = cell(length(Locs),1);
 for ff = Locs
     workingDir = pwd;
@@ -38,7 +43,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/25Jan2018/SMPS/25CTWYSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\25Jan2018\SMPS\25CTWYSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\25Jan2018\SMPS\25CTWYSMPS';
         end        
         tag = '25CTWYSMPS';
         disp(['Processing ',tag]);        
@@ -52,7 +57,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/26Jan2018/SMPS/26MobLPSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\26Jan2018\SMPS\26MobLPSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\26Jan2018\SMPS\26MobLPSMPS';
         end          
         tag = '26MobLPSMPS';
         disp(['Processing ',tag]);        
@@ -67,7 +72,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/27Jan2018/SMPS/27SWVSSPMS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SWVSSPMS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SWVSSPMS';
         end         
         tag = '27SWVSSPMS';
         disp(['Processing ',tag]);        
@@ -80,7 +85,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/27Jan2018/SMPS/27SEVSSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SEVSSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\27Jan2018\SMPS\27SEVSSMPS';
         end           
         tag = '27SEVSSMPS';
         disp(['Processing ',tag]);        
@@ -94,7 +99,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/28Jan2018/SMPS/28CMobLPSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\28Jan2018\SMPS\28CMobLPSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\28Jan2018\SMPS\28CMobLPSMPS';
         end        
         tag = '28CMobLPSMPS';
         disp(['Processing ',tag]);        
@@ -109,7 +114,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/29Jan2018/SMPS/29SWVSSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\29Jan2018\SMPS\29SWVSSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\29Jan2018\SMPS\29SWVSSMPS';
         end        
         tag = '29SWVSSMPS';
         disp(['Processing ',tag]);        
@@ -124,7 +129,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/30Jan2018/SMPS/30NMobLPSPMS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30NMobLPSPMS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30NMobLPSPMS';
         end        
         tag = '30NMobLPSPMS';
         disp(['Processing ',tag]);        
@@ -138,7 +143,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/30Jan2018/SMPS/30STXYMTVRCDSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30STXYMTVRCDSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\30Jan2018\SMPS\30STXYMTVRCDSMPS';
         end         
         tag = '30STXYMTVRCDSMPS';
         disp(['Processing ',tag]);
@@ -153,7 +158,7 @@ for ff = Locs
             dataDir = '/home/tatemeehan/CRREL_SnowCompaction/W_YELLOWSTONE/DATA/31Jan2018/SMPS/31STXYVSMTVRCDSMPS';
         end
         if isWindows
-            dataDir = 'E:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\31Jan2018\SMPS\31STXYVSMTVRCDSMPS';
+            dataDir = 'D:\CRREL_SnowCompaction\W_YELLOWSTONE\DATA\31Jan2018\SMPS\31STXYVSMTVRCDSMPS';
         end        
         tag = '31STXYVSMTVRCDSMPS';
         disp(['Processing ',tag]);
@@ -161,12 +166,15 @@ for ff = Locs
     end
 
 % Plot SMP Profiles for QC
-isQCplot = 0;
+isQCplot = 1;
 % Pick Snow Surface
-isPickSurface = 1;
-isDepthCorrection = 1;
+isPickSurface = 0;
+isDepthCorrection = 0;
 
 %Parse Meta Data
+if isQCplot
+    goodSMPix = 1:length(metaData.Quality);
+else
 % groupSMP = findgroups(metaData.Quality); % Group Data by Quality
 % Find 'Drift','Good','Slight Drift'; 1 == 'Bad'; 3 == 'Dry Run';
 goodSMPix = find(strcmp(metaData.Quality,'Drift') ...
@@ -175,6 +183,7 @@ goodSMPix = find(strcmp(metaData.Quality,'Drift') ...
 % goodSMPix = find((groupSMP ~= 1) & (groupSMP ~= 3));
 % groupSMP = groupSMP(goodSMPix);
 % driftSMPix = find((groupSMP ~= 4));
+end
 
 % Get All SMP Files
 files = dir(fullfile(dataDir,'*.pnt'));
@@ -264,6 +273,7 @@ for ii = 1:length(files)
       if isQCplot
           h = figure(ii);
           plot(SMP{ii}.force,SMP{ii}.depth_F,'k'); axis ij
+          set(h,'WindowStyle','docked')
           if isPickSurface
               if isDepthCorrection
               hold on; plot(SMP{ii}.force(1), SMP{ii}.depth_F(1), 'rx','markersize',10)
@@ -287,7 +297,7 @@ catch
     Waypoints(ff).latitude = [];
 end
 %% Invert SMP profile
-isInvert = 1;
+isInvert = 0;
 if isInvert
 fthresh = 0.0195; % Default
 pfthresh = 0.1;
@@ -307,7 +317,7 @@ end
     
 
 % Export SMP Data and Inversion Results
-isExport = 1;
+isExport = 0;
 if isExport
     cd(dataDir)
     save([tag,'data'],'SMP','-V7.3')
