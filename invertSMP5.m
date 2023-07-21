@@ -224,7 +224,9 @@ function [Fall,zall] = get_maxmin2(F,z)
 
         A=pi*2.5^2; % base area of cone
         if Nm<62 % changed from 62 to allow calculation...but L values should be flagged below 0.58
-            load NvsL2 % load result from Monte-Carlo (see cal_No10.m)
+%             load NvsL2 % load result from Monte-Carlo (see cal_No10.m)
+            Nall = table2array(readtable("NvsL2.csv"));
+            L = table2array(readtable("L.csv"));
             ind=find(Nall(:,3)<56); % use only data for Nm<56
             L=L(ind);Nall=Nall(ind,:);
             Ln=[interp1(Nall(:,1),L,Nm,'spline') interp1(Nall(:,3),L,Nm,'spline') interp1(Nall(:,5),L,Nm,'spline')]; % table-lookup for Ln
